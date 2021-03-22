@@ -6,6 +6,13 @@
   </head>
   <body>
     <h1> Blockchain </h1>
-    <p> this is Fun </p>
+    <ul>
+      {% for item in data %}
+          <p>{{item}}</p>
+          <li>from : {{item.from}}</li>
+          <li>to : {{item.to}}</li>
+          <li>amount : {{item.amount}}</li>
+      {% endfor %}
+    </ul>
   </body>
 </html>

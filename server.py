@@ -10,10 +10,11 @@ chain = {
 api = Api(app)
 parser = reqparse.RequestParser()
 pendingTransaction = []
+pendingTransaction.append({"from": "arthur", "to": "tony", "amount": "1"})
 
 @app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template("index.html", data=pendingTransaction)
 
 class Chain(Resource):
     def get(self):
