@@ -22,7 +22,7 @@ def proof():
     response = requests.post(url="http://127.0.0.1:5000/proof",json=possible_block)
 
 new_transaction = {"from": "tony", "to": "arthur", "amount": "2"}
-# post_new_transaction()
+post_new_transaction()
 proof()
 
 

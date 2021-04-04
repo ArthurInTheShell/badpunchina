@@ -37,6 +37,8 @@ class NewTransaction(Resource):
 class Proof(Resource):
     def post(self):
         args = request.get_data()
+        decoded = json.loads(args.decode())
+        print(decoded)
 
 
 api.add_resource(Chain,'/chain')
