@@ -3,26 +3,25 @@ import requests
 from flask import Flask, jsonify, request
 import json
 
-def post_new_transaction():
-    response = requests.post(url="http://127.0.0.1:5000/transactions/new",json=new_transaction)
-    print(response)
-
 
 def proof():
     response = requests.get(url="http://127.0.0.1:5000/transactions")
-    transaction_list = response.text
+
+    # if empty, opt out
+    if(len(response.json()) == 0):
+        return
+
+    previous_hash = requests.get(url="http://127.0.0.1:5000/previousHash")
+    transaction_list = response.json()
 
     for proof in range(0,1000000):
-        possible_block = json.dumps({"transactions": transaction_list, "previous_hash": 0x0, "proof": proof})
+        possible_block = json.dumps({"transactions": transaction_list, "previous_hash": previous_hash.json(), "proof": proof})
         prefix = sha256(possible_block.encode()).hexdigest()[0:4]
         if(prefix == "0000"):
-            print(sha256(possible_block.encode()).hexdigest())
-            print(proof)
+            print(possible_block)
             break
-    response = requests.post(url="http://127.0.0.1:5000/proof",json=possible_block)
+    response = requests.post(url="http://127.0.0.1:5000/mine/proof",json=possible_block)
 
-new_transaction = {"from": "tony", "to": "arthur", "amount": "2"}
-post_new_transaction()
 proof()
 
 
