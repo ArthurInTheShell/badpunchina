@@ -1,12 +1,14 @@
 
 import sys
 import requests
+from datetime import datetime
 
 def post_new_transaction(from_wallet, to_wallet, amount):
     transaction = {
+        "Amount": amount,
         "From": from_wallet,
-        "To": to_wallet,
-        "Amount": amount
+        "TimeStamp": '' + str(datetime.utcnow()),
+        "To": to_wallet
         }
     response = requests.post(url="http://127.0.0.1:5000/transactions/new",json=transaction)
     print(response)

@@ -10,7 +10,7 @@ app = Flask(__name__)
 chain = []
 api = Api(app)
 parser = reqparse.RequestParser()
-pendingTransaction = []
+pendingTransaction = {}
 balance = dict({'Tony': 1000, 'Arthur': 1000})
 latest_hash =0x0 # Need to be updated everytime a chain updates
 
@@ -44,7 +44,9 @@ class NewTransaction(Resource):
     def post(self):
         args = request.get_json()
         # decoded = json.loads(args)
-        pendingTransaction.append(args)
+        print(args)
+        transaction_hash = sha256(json.dumps(args).encode()).hexdigest()
+        pendingTransaction[transaction_hash] = args
         save()
         resp = jsonify(success=True)
         resp.status_code = 200
@@ -64,7 +66,9 @@ class Proof(Resource):
         global latest_hash
         global pendingTransaction
         balance_cpy = copy.deepcopy(balance)
+        transaction_hashes = []
         for transact in transactions:
+            print(transact)
             source = transact['From']
             dest = transact['To']
             amount = int(transact['Amount'])
@@ -77,10 +81,12 @@ class Proof(Resource):
                 return
             balance_cpy[source] -= amount
             balance_cpy[dest] += amount
+            transaction_hashes.append(sha256(json.dumps(transact).encode()).hexdigest())
         balance = balance_cpy
         latest_hash = hash
         chain.append(args)
-        pendingTransaction = [] #only clear out some
+        for transaction_hash in transaction_hashes:
+            del pendingTransaction[transaction_hash]
         save()
 
 
@@ -101,6 +107,3 @@ api.add_resource(Proof,'/mine/proof')
 api.add_resource(PreviousHash,'/previousHash')
 api.add_resource(Balance,'/balance')
 app.run()
-
-# TODO: Get all the data to the Website
-# TODO: Save to local

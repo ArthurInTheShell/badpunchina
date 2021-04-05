@@ -15,16 +15,15 @@
     <p>Pending Transactions</p>
     <ul>
       {% for item in data[1] %}
-      <p>{{item}}</p>
-          <li>From : {{item.From}}</li>
-          <li>To : {{item.To}}</li>
-          <li>Amount : {{item.Amount}}</li>
+          <li>From : {{data[1][item].From}}</li>
+          <li>To : {{data[1][item].To}}</li>
+          <li>Amount : {{data[1][item].Amount}}</li>
       {% endfor %}
     </ul>
     <p>Chain</p>
     <ul>
       {% for item in data[2] %}
-          <p>{{item}}</p>
+          <li>{{item}}</li>
       {% endfor %}
     </ul>
 
