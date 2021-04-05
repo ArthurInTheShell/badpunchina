@@ -6,12 +6,20 @@
   </head>
   <body>
     <h1> Blockchain </h1>
-    <ul></ul>
-      {% for item in data %}
-          <p>{{item}}</p>
+    <p>Accounts & Balances</p>
+    <ul>
+      {% for item in data[0] %}
+          <li>Name : {{item}},   Balance : {{data[0][item]}}</li>
+      {% endfor %}
+
+      {% for item in data[1] %}
           <li>from : {{item.from}}</li>
           <li>to : {{item.to}}</li>
           <li>amount : {{item.amount}}</li>
+      {% endfor %}
+
+      {% for item in data[2] %}
+          <p>{{item}}</p>
       {% endfor %}
     </ul>
   </body>

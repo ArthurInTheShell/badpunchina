@@ -33,3 +33,6 @@ proof()
 #     PreviousHash: 0x12391823791872,
 #     Proof: 3
 # }
+
+# TODO: Make the miner to select what transactions to include in the block
+# TODO:

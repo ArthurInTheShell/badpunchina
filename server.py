@@ -15,11 +15,11 @@ latest_hash =0x0 # Need to be updated everytime a chain updates
 
 @app.route('/')
 def home():
-    return render_template("index.html", data=pendingTransaction)
+    return render_template("index.html", data=[balance, pendingTransaction, chain])
 
 class Chain(Resource):
     def get(self):
-        return chain
+        return jsonify(chain)
 
 class Transactions(Resource):
     def get(self):
@@ -50,7 +50,11 @@ class Proof(Resource):
         for transact in transactions:
             source = transact['From']
             dest = transact['To']
-            amount = transact['Amount']
+            amount = int(transact['Amount'])
+            if(source not in balance_cpy):
+                balance_cpy[source] = 0
+            if(dest not in balance_cpy):
+                balance_cpy[dest] = 0
             if(balance_cpy[source] < amount):
                 print("insuccient gold")
                 return
@@ -76,3 +80,6 @@ api.add_resource(Proof,'/mine/proof')
 api.add_resource(PreviousHash,'/previousHash')
 api.add_resource(Balance,'/balance')
 app.run()
+
+# TODO: Get all the data to the Website
+# TODO: Save to local
