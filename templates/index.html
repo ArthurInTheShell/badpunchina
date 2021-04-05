@@ -11,16 +11,22 @@
       {% for item in data[0] %}
           <li>Name : {{item}},   Balance : {{data[0][item]}}</li>
       {% endfor %}
-
+    </ul>
+    <p>Pending Transactions</p>
+    <ul>
       {% for item in data[1] %}
-          <li>from : {{item.from}}</li>
-          <li>to : {{item.to}}</li>
-          <li>amount : {{item.amount}}</li>
+      <p>{{item}}</p>
+          <li>From : {{item.From}}</li>
+          <li>To : {{item.To}}</li>
+          <li>Amount : {{item.Amount}}</li>
       {% endfor %}
-
+    </ul>
+    <p>Chain</p>
+    <ul>
       {% for item in data[2] %}
           <p>{{item}}</p>
       {% endfor %}
     </ul>
+
   </body>
 </html>

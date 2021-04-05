@@ -3,6 +3,7 @@ from flask import Flask, render_template, request, jsonify
 from hashlib import sha256
 import json
 import copy
+import pickle
 from flask_restful import Resource, Api,reqparse
 
 app = Flask(__name__)
@@ -12,6 +13,20 @@ parser = reqparse.RequestParser()
 pendingTransaction = []
 balance = dict({'Tony': 1000, 'Arthur': 1000})
 latest_hash =0x0 # Need to be updated everytime a chain updates
+
+def save():
+    # this method is for saving the chain, balance, pendingTransaction, latest_hash
+    with open('chain.pickle', 'wb') as f:
+        pickle.dump([chain,balance,pendingTransaction,latest_hash], f)
+    return
+
+def load():
+    global chain 
+    global balance 
+    global pendingTransaction
+    global latest_hash
+    with open('chain.pickle', 'rb') as f:
+        chain,balance,pendingTransaction,latest_hash = pickle.load(f)
 
 @app.route('/')
 def home():
@@ -30,6 +45,7 @@ class NewTransaction(Resource):
         args = request.get_json()
         # decoded = json.loads(args)
         pendingTransaction.append(args)
+        save()
         resp = jsonify(success=True)
         resp.status_code = 200
         return resp
@@ -46,6 +62,7 @@ class Proof(Resource):
         transactions = decoded['transactions']
         global balance
         global latest_hash
+        global pendingTransaction
         balance_cpy = copy.deepcopy(balance)
         for transact in transactions:
             source = transact['From']
@@ -63,6 +80,9 @@ class Proof(Resource):
         balance = balance_cpy
         latest_hash = hash
         chain.append(args)
+        pendingTransaction = [] #only clear out some
+        save()
+
 
 class PreviousHash(Resource):
     def get(self):
@@ -73,6 +93,7 @@ class Balance(Resource):
     def get(self):
         return balance
 
+load()
 api.add_resource(Chain,'/chain')
 api.add_resource(Transactions,'/transactions')
 api.add_resource(NewTransaction,'/transactions/new')
